@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub Production - PuyDeCom</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="icon" href="https://puydecom.fr/images/Logo-Puy-De-Com.jpeg">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'puy-orange': '#FF7F50',
+                        'puy-red': '#DC2626',
+                        'puy-blue': '#1E40AF'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .tool-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .tool-card:hover {
+            border-color: #FF7F50;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 127, 80, 0.1);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #FF7F50 0%, #FF6B35 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <img src="https://puydecom.fr/images/Logo-Puy-De-Com.jpeg" alt="PuyDeCom" class="h-8 w-8 rounded-full">
+                        <h1 class="ml-3 text-xl font-semibold text-gray-900">Hub Production</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-gray-600">Environnement de Production</span>
+                        <div class="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Centre de Contrôle Production</h2>
+                <p class="text-gray-600">Accédez à tous vos outils de production et de gestion opérationnelle.</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-green-100 rounded-lg">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Statut Système</p>
+                            <p class="text-lg font-semibold text-gray-900">Opérationnel</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-blue-100 rounded-lg">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Performance</p>
+                            <p class="text-lg font-semibold text-gray-900">Optimale</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-orange-100 rounded-lg">
+                            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Outils Actifs</p>
+                            <p class="text-lg font-semibold text-gray-900">8</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-purple-100 rounded-lg">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Équipe Active</p>
+                            <p class="text-lg font-semibold text-gray-900">En ligne</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tools Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dashboard -->
+                <a href="dashboard.html" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 block hover:no-underline">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 gradient-bg rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Dashboard</h3>
+                            <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Actif</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Vue d'ensemble des performances, métriques et indicateurs clés de votre activité.</p>
+                </a>
+
+                <!-- Content Creation -->
+                <a href="create-post.html" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 block hover:no-underline">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 gradient-bg rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Création de Contenu</h3>
+                            <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Nouveau</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Outil complet de création et d'édition de contenus pour vos réseaux sociaux et campagnes.</p>
+                </a>
+
+                <!-- Calendar -->
+                <a href="calendar.html" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 block hover:no-underline">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 gradient-bg rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Calendrier</h3>
+                            <span class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Planification</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Planification et gestion de vos publications, événements et campagnes marketing.</p>
+                </a>
+
+                <!-- Analytics -->
+                <a href="analytics.html" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 block hover:no-underline">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 gradient-bg rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Analytics</h3>
+                            <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">Données</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Analyses détaillées des performances, trafic et ROI de vos actions marketing.</p>
+                </a>
+
+                <!-- Client Management -->
+                <a href="clients.html" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 block hover:no-underline">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 gradient-bg rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Gestion Clients</h3>
+                            <span class="inline-block bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">CRM</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Interface de gestion complète de votre portefeuille clients et prospects.</p>
+                </a>
+
+                <!-- Settings -->
+                <a href="settings.html" class="tool-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 block hover:no-underline">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 gradient-bg rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Paramètres</h3>
+                            <span class="inline-block bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">Config</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Configuration avancée de vos outils, intégrations et préférences système.</p>
+                </a>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="mt-8 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-6 border border-orange-200">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Actions Rapides</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button onclick="window.location.href='create-post.html'" class="bg-white hover:bg-gray-50 border border-gray-200 rounded-lg p-4 text-left transition-colors">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-orange-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            <span class="font-medium">Nouveau Post</span>
+                        </div>
+                    </button>
+                    
+                    <button onclick="window.location.href='calendar.html'" class="bg-white hover:bg-gray-50 border border-gray-200 rounded-lg p-4 text-left transition-colors">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="font-medium">Programmer</span>
+                        </div>
+                    </button>
+                    
+                    <button onclick="window.location.href='analytics.html'" class="bg-white hover:bg-gray-50 border border-gray-200 rounded-lg p-4 text-left transition-colors">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                            <span class="font-medium">Analyser</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Configuration Supabase
+        const supabaseUrl = 'https://ltqkbtfdjvslqktjtbod.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0cWtidGZkanZzbHFrdGp0Ym9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4MjE1NzgsImV4cCI6MjA3MjM5NzU3OH0.RnZQZ3QmYrcedLK-IefXCQhTeNFJOUNmU7O0f5HGkLg'
+        
+        // Initialisation Supabase
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+        
+        // Vérification de l'état de connexion
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Hub Production PuyDeCom - Interface initialisée');
+            
+            // Animation des cartes au chargement
+            const cards = document.querySelectorAll('.tool-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Admin - PuyDeCom</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="icon" href="https://puydecom.fr/images/Logo-Puy-De-Com.jpeg">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    Connexion Admin PuyDeCom
+                </h2>
+                <p class="mt-2 text-center text-sm text-gray-600">
+                    Zone réservée à l'équipe PuyDeCom
+                </p>
+            </div>
+            
+            <form id="loginForm" class="mt-8 space-y-6">
+                <div class="space-y-4">
+                    <div>
+                        <label for="email" class="sr-only">Email</label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            autocomplete="email"
+                            required
+                            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                            placeholder="Email administrateur"
+                        />
+                    </div>
+                    <div>
+                        <label for="password" class="sr-only">Mot de passe</label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autocomplete="current-password"
+                            required
+                            class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                            placeholder="Mot de passe"
+                        />
+                    </div>
+                </div>
+
+                <div id="errorMessage" class="hidden text-red-600 text-sm text-center bg-red-50 p-3 rounded-md"></div>
+
+                <div>
+                    <button
+                        type="submit"
+                        id="loginButton"
+                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Se connecter
+                    </button>
+                </div>
+
+                <div class="text-xs text-center text-gray-500 mt-4">
+                    <p>🔐 Authentification sécurisée par Supabase</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Configuration Supabase
+        const SUPABASE_URL = 'https://ltqkbtfdjvslqktjtbod.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0cWtidGZkanZzbHFrdGp0Ym9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4MjE1NzgsImV4cCI6MjA3MjM5NzU3OH0.RnZQZ3QmYrcedLK-IefXCQhTeNFJOUNmU7O0f5HGkLg';
+        
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Vérifier si l'utilisateur est déjà connecté
+        supabaseClient.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                window.location.href = './dashboard.html';
+            }
+        });
+
+        // Gestion du formulaire de connexion
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const loginButton = document.getElementById('loginButton');
+            
+            // Désactiver le bouton et afficher le loading
+            loginButton.disabled = true;
+            loginButton.textContent = 'Connexion...';
+            errorMessage.classList.add('hidden');
+            
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // Succès - rediriger vers le dashboard
+                window.location.href = './dashboard.html';
+                
+            } catch (error) {
+                console.error('Erreur de connexion:', error);
+                errorMessage.textContent = error.message || 'Erreur de connexion';
+                errorMessage.classList.remove('hidden');
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = 'Se connecter';
+            }
+        });
+    </script>
+</body>
+</html>

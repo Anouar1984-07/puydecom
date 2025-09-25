@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clients - PuyDeCom Production</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="https://puydecom.fr/images/Logo-Puy-De-Com.jpeg">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'puy-orange': '#FF7F50',
+                        'puy-pink': '#DB2777',
+                        'puy-dark': '#1F2937'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50">
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="flex items-center">
+                    <img src="https://puydecom.fr/images/Logo-Puy-De-Com.jpeg" alt="PuyDeCom" class="w-8 h-8 rounded-full mr-3">
+                    <div>
+                        <h2 class="text-white font-bold text-lg">PuyDeCom</h2>
+                        <p class="text-gray-300 text-xs">Production</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                    Dashboard
+                </a>
+                
+                <a href="clients.html" class="nav-item active">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Clients
+                </a>
+                
+                <a href="create-post.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Créer un Post
+                </a>
+                
+                <a href="calendar.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Calendrier
+                </a>
+                
+                <a href="analytics.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Analytics
+                </a>
+                
+                <a href="settings.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Paramètres
+                </a>
+                
+                <div class="mt-8 border-t border-white/10 pt-4">
+                    <button class="nav-item" data-logout>
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        Déconnexion
+                    </button>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button id="toggleSidebar" class="lg:hidden p-2 rounded-lg hover:bg-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                    <h1 class="text-2xl font-bold text-gray-900 ml-4">Clients</h1>
+                </div>
+                
+                <div class="header-right">
+                    <button class="btn btn-primary" onclick="openAddClientModal()">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Nouveau Client
+                    </button>
+                    
+                    <div class="flex items-center space-x-3">
+                        <div class="text-right">
+                            <p class="text-sm font-medium text-gray-900" data-user-name>Utilisateur</p>
+                            <p class="text-xs text-gray-500" data-user-email>email@domain.com</p>
+                        </div>
+                        <img src="https://puydecom.fr/images/Logo-Puy-De-Com.jpeg" alt="Avatar" class="w-8 h-8 rounded-full">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="content">
+                <!-- Filters and Search -->
+                <div class="card mb-6">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                        <div class="flex flex-1 items-center space-x-4">
+                            <div class="relative flex-1 max-w-md">
+                                <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                <input
+                                    type="text"
+                                    id="searchInput"
+                                    placeholder="Rechercher un client..."
+                                    class="form-input pl-10"
+                                />
+                            </div>
+                            
+                            <select id="industryFilter" class="form-select w-48">
+                                <option value="">Tous les secteurs</option>
+                                <option value="restaurant">Restaurant</option>
+                                <option value="retail">Commerce</option>
+                                <option value="beauty">Beauté</option>
+                                <option value="services">Services</option>
+                                <option value="tech">Technologie</option>
+                            </select>
+                            
+                            <select id="statusFilter" class="form-select w-32">
+                                <option value="">Tous</option>
+                                <option value="active">Actif</option>
+                                <option value="inactive">Inactif</option>
+                                <option value="pending">En attente</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex items-center space-x-2">
+                            <button id="gridView" class="p-2 rounded-lg hover:bg-gray-100 active">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                                </svg>
+                            </button>
+                            <button id="listView" class="p-2 rounded-lg hover:bg-gray-100">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clients Grid/List -->
+                <div id="clientsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Clients will be loaded here -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="hidden text-center py-12">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">Aucun client trouvé</h3>
+                    <p class="mt-1 text-sm text-gray-500">Commencez par ajouter un nouveau client.</p>
+                    <div class="mt-6">
+                        <button class="btn btn-primary" onclick="openAddClientModal()">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Nouveau Client
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add Client Modal -->
+    <div id="addClientModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Nouveau Client</h3>
+                <button onclick="closeAddClientModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="addClientForm" class="space-y-4">
+                <div class="form-group">
+                    <label class="form-label" for="clientName">Nom du client</label>
+                    <input type="text" id="clientName" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="clientIndustry">Secteur d'activité</label>
+                    <select id="clientIndustry" class="form-input form-select" required>
+                        <option value="">Sélectionnez un secteur</option>
+                        <option value="restaurant">Restaurant</option>
+                        <option value="retail">Commerce</option>
+                        <option value="beauty">Beauté</option>
+                        <option value="services">Services</option>
+                        <option value="tech">Technologie</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="clientEmail">Email de contact</label>
+                    <input type="email" id="clientEmail" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="clientWebsite">Site web (optionnel)</label>
+                    <input type="url" id="clientWebsite" class="form-input">
+                </div>
+                
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeAddClientModal()" class="btn btn-secondary">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Créer le client
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Client Detail Modal -->
+    <div id="clientDetailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-900" id="clientDetailName">Client</h3>
+                <button onclick="closeClientDetailModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="clientDetailContent">
+                <!-- Client details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/supabase.js"></script>
+    <script>
+        let clients = [];
+        let filteredClients = [];
+        let viewMode = 'grid';
+
+        // Mobile sidebar toggle
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        });
+
+        // Mock client data
+        const mockClients = [
+            {
+                id: 1,
+                name: 'Café Central',
+                industry: 'restaurant',
+                status: 'active',
+                email: 'contact@cafecentral.fr',
+                website: 'https://cafecentral.fr',
+                posts_count: 24,
+                engagement_rate: 94,
+                last_post: '2024-01-15',
+                avatar: '☕',
+                platforms: ['instagram', 'facebook'],
+                created_at: '2024-01-01'
+            },
+            {
+                id: 2,
+                name: 'Restaurant Italia',
+                industry: 'restaurant',
+                status: 'active',
+                email: 'info@restaurant-italia.fr',
+                website: 'https://restaurant-italia.fr',
+                posts_count: 18,
+                engagement_rate: 87,
+                last_post: '2024-01-14',
+                avatar: '🍝',
+                platforms: ['instagram', 'facebook', 'google'],
+                created_at: '2024-01-05'
+            },
+            {
+                id: 3,
+                name: 'Boutique Mode',
+                industry: 'retail',
+                status: 'active',
+                email: 'hello@boutiquemode.fr',
+                website: 'https://boutiquemode.fr',
+                posts_count: 15,
+                engagement_rate: 91,
+                last_post: '2024-01-13',
+                avatar: '👗',
+                platforms: ['instagram', 'tiktok', 'pinterest'],
+                created_at: '2024-01-10'
+            },
+            {
+                id: 4,
+                name: 'Salon Beauté',
+                industry: 'beauty',
+                status: 'active',
+                email: 'contact@salonbeaute.fr',
+                posts_count: 12,
+                engagement_rate: 89,
+                last_post: '2024-01-12',
+                avatar: '💄',
+                platforms: ['instagram', 'facebook'],
+                created_at: '2024-01-08'
+            },
+            {
+                id: 5,
+                name: 'TechStart Solutions',
+                industry: 'tech',
+                status: 'pending',
+                email: 'contact@techstart.fr',
+                website: 'https://techstart.fr',
+                posts_count: 3,
+                engagement_rate: 76,
+                last_post: '2024-01-10',
+                avatar: '💻',
+                platforms: ['linkedin', 'twitter'],
+                created_at: '2024-01-12'
+            }
+        ];
+
+        // Initialize page
+        async function initClients() {
+            clients = mockClients; // Replace with actual Supabase call
+            filteredClients = [...clients];
+            renderClients();
+            setupEventListeners();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search
+            document.getElementById('searchInput').addEventListener('input', filterClients);
+            
+            // Filters
+            document.getElementById('industryFilter').addEventListener('change', filterClients);
+            document.getElementById('statusFilter').addEventListener('change', filterClients);
+            
+            // View modes
+            document.getElementById('gridView').addEventListener('click', () => setViewMode('grid'));
+            document.getElementById('listView').addEventListener('click', () => setViewMode('list'));
+            
+            // Add client form
+            document.getElementById('addClientForm').addEventListener('submit', handleAddClient);
+        }
+
+        // Filter clients
+        function filterClients() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const industry = document.getElementById('industryFilter').value;
+            const status = document.getElementById('statusFilter').value;
+
+            filteredClients = clients.filter(client => {
+                const matchesSearch = client.name.toLowerCase().includes(search) || 
+                                    client.email.toLowerCase().includes(search);
+                const matchesIndustry = !industry || client.industry === industry;
+                const matchesStatus = !status || client.status === status;
+                
+                return matchesSearch && matchesIndustry && matchesStatus;
+            });
+
+            renderClients();
+        }
+
+        // Set view mode
+        function setViewMode(mode) {
+            viewMode = mode;
+            
+            // Update buttons
+            document.getElementById('gridView').classList.toggle('active', mode === 'grid');
+            document.getElementById('listView').classList.toggle('active', mode === 'list');
+            
+            renderClients();
+        }
+
+        // Render clients
+        function renderClients() {
+            const container = document.getElementById('clientsContainer');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (filteredClients.length === 0) {
+                container.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            container.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            
+            if (viewMode === 'grid') {
+                container.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+                container.innerHTML = filteredClients.map(renderClientCard).join('');
+            } else {
+                container.className = 'space-y-4';
+                container.innerHTML = filteredClients.map(renderClientListItem).join('');
+            }
+        }
+
+        // Render client card (grid view)
+        function renderClientCard(client) {
+            const statusColors = {
+                'active': 'bg-green-100 text-green-800',
+                'inactive': 'bg-gray-100 text-gray-800',
+                'pending': 'bg-yellow-100 text-yellow-800'
+            };
+
+            const statusLabels = {
+                'active': 'Actif',
+                'inactive': 'Inactif',
+                'pending': 'En attente'
+            };
+
+            const platforms = client.platforms?.map(platform => {
+                const icons = {
+                    'instagram': '📷',
+                    'facebook': '📘',
+                    'linkedin': '💼',
+                    'twitter': '🐦',
+                    'tiktok': '🎵',
+                    'pinterest': '📌',
+                    'google': '🔍'
+                };
+                return icons[platform] || '📱';
+            }).join(' ') || '';
+
+            return `
+                <div class="card hover:shadow-lg transition-all duration-200 cursor-pointer" onclick="openClientDetail(${client.id})">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gradient-to-br from-puy-orange to-puy-pink rounded-full flex items-center justify-center text-white text-xl font-bold">
+                                ${client.avatar}
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">${client.name}</h3>
+                                <p class="text-sm text-gray-500 capitalize">${client.industry}</p>
+                            </div>
+                        </div>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[client.status]}">
+                            ${statusLabels[client.status]}
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Posts ce mois</span>
+                            <span class="font-medium">${client.posts_count}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Engagement</span>
+                            <span class="font-medium text-green-600">${client.engagement_rate}%</span>
+                        </div>
+                        ${client.last_post ? `
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Dernier post</span>
+                            <span class="font-medium">${new Date(client.last_post).toLocaleDateString('fr-FR')}</span>
+                        </div>` : ''}
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="text-lg">${platforms}</div>
+                        <button onclick="event.stopPropagation(); window.location.href='create-post.html?client=${client.id}'" class="btn btn-primary btn-sm">
+                            Créer un post
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render client list item (list view)
+        function renderClientListItem(client) {
+            const statusColors = {
+                'active': 'bg-green-100 text-green-800',
+                'inactive': 'bg-gray-100 text-gray-800',
+                'pending': 'bg-yellow-100 text-yellow-800'
+            };
+
+            const statusLabels = {
+                'active': 'Actif',
+                'inactive': 'Inactif',
+                'pending': 'En attente'
+            };
+
+            return `
+                <div class="card hover:shadow-lg transition-all duration-200 cursor-pointer" onclick="openClientDetail(${client.id})">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-puy-orange to-puy-pink rounded-full flex items-center justify-center text-white text-xl font-bold">
+                                ${client.avatar}
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-900">${client.name}</h3>
+                                <p class="text-sm text-gray-500">${client.email}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-6">
+                            <div class="text-center">
+                                <p class="text-lg font-semibold text-gray-900">${client.posts_count}</p>
+                                <p class="text-xs text-gray-500">Posts</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-lg font-semibold text-green-600">${client.engagement_rate}%</p>
+                                <p class="text-xs text-gray-500">Engagement</p>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[client.status]}">
+                                ${statusLabels[client.status]}
+                            </span>
+                            <button onclick="event.stopPropagation(); window.location.href='create-post.html?client=${client.id}'" class="btn btn-primary">
+                                Créer un post
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Modal functions
+        function openAddClientModal() {
+            document.getElementById('addClientModal').classList.remove('hidden');
+        }
+
+        function closeAddClientModal() {
+            document.getElementById('addClientModal').classList.add('hidden');
+            document.getElementById('addClientForm').reset();
+        }
+
+        function openClientDetail(clientId) {
+            const client = clients.find(c => c.id === clientId);
+            if (!client) return;
+
+            document.getElementById('clientDetailName').textContent = client.name;
+            
+            const content = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-gradient-to-br from-puy-orange to-puy-pink rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                                ${client.avatar}
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold">${client.name}</h4>
+                                <p class="text-gray-500 capitalize">${client.industry}</p>
+                                <p class="text-sm text-gray-400">Client depuis ${new Date(client.created_at).toLocaleDateString('fr-FR')}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <p><strong>Email:</strong> ${client.email}</p>
+                            ${client.website ? `<p><strong>Site web:</strong> <a href="${client.website}" target="_blank" class="text-puy-orange hover:underline">${client.website}</a></p>` : ''}
+                            <p><strong>Statut:</strong> <span class="capitalize">${client.status}</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <h5 class="font-semibold text-gray-900">Statistiques</h5>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                <p class="text-2xl font-bold text-gray-900">${client.posts_count}</p>
+                                <p class="text-sm text-gray-500">Posts totaux</p>
+                            </div>
+                            <div class="text-center p-4 bg-gray-50 rounded-lg">
+                                <p class="text-2xl font-bold text-green-600">${client.engagement_rate}%</p>
+                                <p class="text-sm text-gray-500">Engagement</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h6 class="font-medium text-gray-900 mb-2">Plateformes actives</h6>
+                            <div class="flex space-x-2">
+                                ${client.platforms?.map(platform => `
+                                    <span class="px-3 py-1 bg-puy-orange/10 text-puy-orange rounded-full text-sm capitalize">
+                                        ${platform}
+                                    </span>
+                                `).join('') || '<span class="text-gray-500">Aucune plateforme configurée</span>'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-3 mt-6 pt-6 border-t">
+                    <button onclick="closeClientDetailModal()" class="btn btn-secondary">Fermer</button>
+                    <button onclick="window.location.href='create-post.html?client=${client.id}'" class="btn btn-primary">Créer un post</button>
+                    <button onclick="window.location.href='analytics.html?client=${client.id}'" class="btn btn-outline">Voir Analytics</button>
+                </div>
+            `;
+            
+            document.getElementById('clientDetailContent').innerHTML = content;
+            document.getElementById('clientDetailModal').classList.remove('hidden');
+        }
+
+        function closeClientDetailModal() {
+            document.getElementById('clientDetailModal').classList.add('hidden');
+        }
+
+        // Handle add client form
+        async function handleAddClient(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const clientData = {
+                name: document.getElementById('clientName').value,
+                industry: document.getElementById('clientIndustry').value,
+                email: document.getElementById('clientEmail').value,
+                website: document.getElementById('clientWebsite').value,
+                status: 'active',
+                posts_count: 0,
+                engagement_rate: 0,
+                avatar: '🏢',
+                platforms: [],
+                created_at: new Date().toISOString()
+            };
+            
+            // Add to mock data (replace with actual Supabase call)
+            const newClient = { ...clientData, id: Date.now() };
+            clients.push(newClient);
+            filteredClients = [...clients];
+            
+            renderClients();
+            closeAddClientModal();
+            
+            window.PuyDeComAuth.showNotification('Client ajouté avec succès!', 'success');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', initClients);
+    </script>
+</body>
+</html>

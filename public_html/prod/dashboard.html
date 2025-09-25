@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PuyDeCom Production</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="https://puydecom.fr/images/Logo-Puy-De-Com.jpeg">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'puy-orange': '#FF7F50',
+                        'puy-pink': '#DB2777',
+                        'puy-dark': '#1F2937'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50">
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="flex items-center">
+                    <img src="https://puydecom.fr/images/Logo-Puy-De-Com.jpeg" alt="PuyDeCom" class="w-8 h-8 rounded-full mr-3">
+                    <div>
+                        <h2 class="text-white font-bold text-lg">PuyDeCom</h2>
+                        <p class="text-gray-300 text-xs">Production</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                    Dashboard
+                </a>
+                
+                <a href="clients.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Clients
+                </a>
+                
+                <a href="create-post.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Créer un Post
+                </a>
+                
+                <a href="calendar.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    Calendrier
+                </a>
+                
+                <a href="analytics.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Analytics
+                </a>
+                
+                <a href="settings.html" class="nav-item">
+                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    Paramètres
+                </a>
+                
+                <div class="mt-8 border-t border-white/10 pt-4">
+                    <button class="nav-item" data-logout>
+                        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        Déconnexion
+                    </button>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button id="toggleSidebar" class="lg:hidden p-2 rounded-lg hover:bg-gray-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                    <h1 class="text-2xl font-bold text-gray-900 ml-4">Dashboard</h1>
+                </div>
+                
+                <div class="header-right">
+                    <button class="p-2 rounded-lg hover:bg-gray-100 relative">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5-5-5h5v-5H10V7h5V2l5 5-5 5z"/>
+                        </svg>
+                        <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    
+                    <div class="flex items-center space-x-3">
+                        <div class="text-right">
+                            <p class="text-sm font-medium text-gray-900" data-user-name>Utilisateur</p>
+                            <p class="text-xs text-gray-500" data-user-email>email@domain.com</p>
+                        </div>
+                        <img src="https://puydecom.fr/images/Logo-Puy-De-Com.jpeg" alt="Avatar" class="w-8 h-8 rounded-full">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="content">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="stat-value" id="clientsCount">0</p>
+                                <p class="stat-label">Clients Actifs</p>
+                                <div class="stat-change positive">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                                    </svg>
+                                    +12% ce mois
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 bg-gradient-to-br from-puy-orange to-puy-pink rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="stat-value" id="postsCount">0</p>
+                                <p class="stat-label">Posts ce Mois</p>
+                                <div class="stat-change positive">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                                    </svg>
+                                    +28% ce mois
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="stat-value" id="pendingCount">0</p>
+                                <p class="stat-label">En Attente</p>
+                                <div class="stat-change">
+                                    <svg class="w-4 h-4 mr-1 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    À traiter
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="stat-value">94%</p>
+                                <p class="stat-label">Taux d'Engagement</p>
+                                <div class="stat-change positive">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                                    </svg>
+                                    +5% ce mois
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-teal-500 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts and Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Performance Chart -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Performance des Posts</h3>
+                            <select class="form-select w-32">
+                                <option>7 derniers jours</option>
+                                <option>30 derniers jours</option>
+                                <option>3 derniers mois</option>
+                            </select>
+                        </div>
+                        <canvas id="performanceChart" width="400" height="200"></canvas>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Activité Récente</h3>
+                            <button class="btn btn-outline">Voir tout</button>
+                        </div>
+                        <div class="space-y-4" id="recentActivity">
+                            <!-- Activity items will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Clients and Upcoming Posts -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Top Clients -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Top Clients ce Mois</h3>
+                            <a href="clients.html" class="btn btn-outline">Voir tous</a>
+                        </div>
+                        <div class="space-y-3" id="topClients">
+                            <!-- Top clients will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Posts -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Posts Programmés</h3>
+                            <a href="calendar.html" class="btn btn-outline">Calendrier</a>
+                        </div>
+                        <div class="space-y-3" id="upcomingPosts">
+                            <!-- Upcoming posts will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script type="module" src="js/supabase.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('show');
+        });
+
+        // Initialize dashboard
+        async function initDashboard() {
+            try {
+                // Load dashboard stats
+                await loadStats();
+                await loadRecentActivity();
+                await loadTopClients();
+                await loadUpcomingPosts();
+                await initPerformanceChart();
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+            }
+        }
+
+        // Load dashboard statistics
+        async function loadStats() {
+            try {
+                // Mock data - replace with actual Supabase queries
+                const clients = await window.PuyDeComAuth.getClients();
+                document.getElementById('clientsCount').textContent = clients.length;
+
+                const posts = await window.PuyDeComAuth.getPosts();
+                const currentMonth = new Date().getMonth();
+                const thisMonthPosts = posts.filter(post => 
+                    new Date(post.created_at).getMonth() === currentMonth
+                );
+                document.getElementById('postsCount').textContent = thisMonthPosts.length;
+
+                const pendingPosts = posts.filter(post => post.status === 'pending');
+                document.getElementById('pendingCount').textContent = pendingPosts.length;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load recent activity
+        async function loadRecentActivity() {
+            const container = document.getElementById('recentActivity');
+            const activities = [
+                { type: 'post', client: 'Café Central', action: 'Post publié sur Instagram', time: '2h', icon: '📸' },
+                { type: 'client', client: 'Restaurant Italia', action: 'Nouveau client ajouté', time: '4h', icon: '👤' },
+                { type: 'ai', client: 'Boutique Mode', action: 'Contenu IA généré', time: '6h', icon: '🤖' },
+                { type: 'approval', client: 'Salon Beauté', action: 'Post approuvé', time: '1j', icon: '✅' }
+            ];
+
+            container.innerHTML = activities.map(activity => `
+                <div class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div class="text-2xl">${activity.icon}</div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">${activity.client}</p>
+                        <p class="text-xs text-gray-500">${activity.action}</p>
+                    </div>
+                    <span class="text-xs text-gray-400">${activity.time}</span>
+                </div>
+            `).join('');
+        }
+
+        // Load top clients
+        async function loadTopClients() {
+            const container = document.getElementById('topClients');
+            const clients = [
+                { name: 'Café Central', posts: 24, engagement: '94%', avatar: '☕' },
+                { name: 'Restaurant Italia', posts: 18, engagement: '87%', avatar: '🍝' },
+                { name: 'Boutique Mode', posts: 15, engagement: '91%', avatar: '👗' },
+                { name: 'Salon Beauté', posts: 12, engagement: '89%', avatar: '💄' }
+            ];
+
+            container.innerHTML = clients.map(client => `
+                <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-puy-orange to-puy-pink rounded-full flex items-center justify-center text-white font-bold">
+                            ${client.avatar}
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">${client.name}</p>
+                            <p class="text-xs text-gray-500">${client.posts} posts ce mois</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-green-600">${client.engagement}</p>
+                        <p class="text-xs text-gray-500">engagement</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load upcoming posts
+        async function loadUpcomingPosts() {
+            const container = document.getElementById('upcomingPosts');
+            const posts = [
+                { client: 'Café Central', platform: 'Instagram', time: '14:30', type: 'Image', status: 'ready' },
+                { client: 'Restaurant Italia', platform: 'Facebook', time: '18:00', type: 'Video', status: 'pending' },
+                { client: 'Boutique Mode', platform: 'LinkedIn', time: '09:00 + 1j', type: 'Carrousel', status: 'ready' },
+                { client: 'Salon Beauté', platform: 'Instagram', time: '16:00 + 1j', type: 'Story', status: 'draft' }
+            ];
+
+            const platformIcons = {
+                'Instagram': '📷',
+                'Facebook': '📘',
+                'LinkedIn': '💼',
+                'Twitter': '🐦'
+            };
+
+            const statusColors = {
+                'ready': 'bg-green-100 text-green-800',
+                'pending': 'bg-yellow-100 text-yellow-800',
+                'draft': 'bg-gray-100 text-gray-800'
+            };
+
+            container.innerHTML = posts.map(post => `
+                <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div class="flex items-center space-x-3">
+                        <div class="text-2xl">${platformIcons[post.platform]}</div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">${post.client}</p>
+                            <p class="text-xs text-gray-500">${post.platform} • ${post.type}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-gray-900">${post.time}</p>
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${statusColors[post.status]}">
+                            ${post.status}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize performance chart
+        function initPerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                    datasets: [{
+                        label: 'Engagement',
+                        data: [85, 92, 78, 95, 88, 94, 90],
+                        borderColor: '#FF7F50',
+                        backgroundColor: 'rgba(255, 127, 80, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Portée',
+                        data: [65, 78, 82, 75, 90, 85, 88],
+                        borderColor: '#DB2777',
+                        backgroundColor: 'rgba(219, 39, 119, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>
